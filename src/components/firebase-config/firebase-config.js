@@ -1,5 +1,4 @@
 import {initializeApp} from 'firebase/app';
-import {getMessaging, getToken} from 'firebase/messaging';
 
 const firebaseConfig = {
     apiKey: "AIzaSyCBzB5AiIrys1AssoD4LsvXudSt8ShbC_k",
@@ -12,11 +11,8 @@ const firebaseConfig = {
   };
 
 const app = initializeApp(firebaseConfig);
-const messaging = getMessaging(app);
-//TODO: find out more about the cloud messaging crap
-getToken(messaging, {vapidKey: "BGxR1MBrbeusvsCB1gQthN82JHWL80iHFN2vnt5YndhTrA1sDufS52zdRa4-5kBy0NrvguWZP3SPdkGXUezHXoI"})
-.then((currentToken) => {
 
-})
+//learn about firestore
+
 
 
