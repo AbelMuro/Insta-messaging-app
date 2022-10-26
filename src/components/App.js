@@ -4,6 +4,9 @@ import {collection, addDoc, setDoc, doc} from 'firebase/firestore'
 
 
 function App(){
+    //const collectionRef = collection(db, "users");            //selects a collection
+    //const docRef = (collectionRef, "Abel")                    //selects a document within the collection
+
 
     async function addDocument () {
         try{
@@ -21,7 +24,7 @@ function App(){
 
     (async function replaceDocument() {
         try{
-            const newDocument = doc(db, "cities", "LA")
+            const newDocument = doc(db, "cities", "LA");
             await setDoc(newDocument, {
                 name: "abelito"
             })
@@ -31,6 +34,8 @@ function App(){
         }
     })();
 
+
+    //TODO: read data from firestore
 
 
     return(<>hello world</>)
