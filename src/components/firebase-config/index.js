@@ -1,3 +1,3 @@
-import {messaging} from './firebase-config.js';
+import {db} from './firebase-config.js';
 
-export {messaging};
+export {db};
