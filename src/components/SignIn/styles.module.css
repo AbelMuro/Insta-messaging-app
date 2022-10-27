@@ -20,3 +20,16 @@
     width: 400px;
     height: 800px;
 }
+
+
+
+.signInButton{
+    display: flex;
+    align-items: center;
+    width: 169px;
+}
+
+.googleIcon, .appleIcon{
+    object-fit: contain;
+    width: 50px;
+}
