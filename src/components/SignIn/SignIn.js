@@ -1,21 +1,17 @@
 import React from 'react';
 import {auth} from '../firebase-config';
 import {useSignInWithGoogle, useSignInWithApple} from 'react-firebase-hooks/auth';
-import {} from 'firebase/auth';
-import {useNavigate} from 'react-router-dom';
 import styles from './styles.module.css';
 import googleIcon from './images/google icon.png';
 import appleIcon from './images/apple icon.png';
 
 function SignIn() {
-    const navigate = useNavigate();
     const [signInWithGoogle] = useSignInWithGoogle(auth);
     const [signInWithApple] = useSignInWithApple(auth);
 
     const handleGoogle = async () => {
         try{
            await signInWithGoogle(); 
-           navigate("/chat");
         }
         catch(error){
             console.log(error);
@@ -25,7 +21,6 @@ function SignIn() {
     const handleApple = async () => {
         try{
             await signInWithApple();
-            navigate("/chat");
         }
         catch(error){
             console.log(error);

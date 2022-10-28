@@ -6,12 +6,38 @@
 
 .chatBubbles{
     display: inline-block;
-    min-width: 100px;
+    max-width: 500px;
+    height: auto;
     padding: 20px;
     background-color: greenyellow;
     border-radius: 20px;
-    margin: 10px 0px;
 }
+
+.userPhoto{
+    object-fit: contain;
+    height: 60px;
+    border-radius: 100%;
+}
+
+.messageContainerToTheLeft{
+    display: flex;
+    margin: 10px;
+    gap: 20px;
+}
+
+.messageContainerToTheRight{
+    display: flex;
+    flex-direction: row-reverse;
+    margin: 10px;
+    gap: 20px
+}
+
+.userSaid{
+    font-weight: bold;
+}
+
+
+
 
 .inputContainer{
     width: 100%;
@@ -25,13 +51,23 @@
     background-color:darkgrey;
     color: white;
     border: none;
-    width: 80%;
+    width: 60%;
     height: 100%;
 }
 
-.sendMessage{
+
+.sendMessage, .logoutButton{
     width: 20%;
     height: 100%;
     cursor: pointer;
     border: none;
+}
+
+.logoutButton{
+    border-left: 1px solid black;
+}
+
+.sendMessage:hover, .logoutButton:hover{
+    background-color: grey;
+    color: white;
 }
