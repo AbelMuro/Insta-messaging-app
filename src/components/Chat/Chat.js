@@ -9,8 +9,9 @@ import styles from './styles.module.css'
 
 function Chat() {
     const [username, setUsername] = useState("");
+    const [userID, setUserID] = useState("");
     const [userPhoto, setUserPhoto] = useState("");
-    const messageBox = [];
+    const [, forceRender] = useState(1);
     const collectionRef = collection(db, "messages");
     const q = query(collectionRef, orderBy("createdAt")); 
     const [messages, loading] = useCollectionData(q);
@@ -27,18 +28,27 @@ function Chat() {
     onAuthStateChanged(auth, (currentUser) => {
         if(currentUser != null){
             let name = currentUser.displayName;
-            let photo = currentUser.photoURL;
+            let id = currentUser.uid;
+            let photo;
+            if(currentUser.photoURL)
+                photo = currentUser.photoURL;
+            else
+                photo = "http://dummyimage.com/100x100.png/ff4444/ffffff"          
             setUsername(name);
+            setUserID(id);
             setUserPhoto(photo);
         }
     })
 
-    const sendMessage = async () => {  
+    const sendMessage = async () => {
         let inputBox = document.querySelector("." + styles.input);
         if(inputBox.value == "") {
             alert("Please enter a message");
             return;
         }
+
+        let messageButton = document.querySelector("." + styles.sendMessage); 
+        messageButton.setAttribute("disabled", true);
         try{
             const currentDate = new Date();
             const millisecondsSince1970 = currentDate.getTime();                //im using this function to order the messages by the time they were created
@@ -48,43 +58,21 @@ function Chat() {
             const seconds = currentDate.getSeconds();
             const messageEntered = readableDate + ", Hour:" + hour + " Minutes:" + minutes + " Seconds:" + seconds;
             const input = document.querySelector("." + styles.input);
-            await addDoc(collectionRef, {name: username, photo: userPhoto, message: input.value, timeStamp: messageEntered, createdAt: millisecondsSince1970});
+            await addDoc(collectionRef, {name: username, userID: userID, photo: userPhoto, 
+                message: input.value, timeStamp: messageEntered, createdAt: millisecondsSince1970});
         }
         catch(error){
             console.log(error);
         }
+        finally{
+            setTimeout(() => {
+                messageButton.setAttribute("disabled", false);
+                forceRender(2);
+            }, 5000)
+        }
     }
 
 
-
-    if(!loading){
-        messages.map((message) => {
-            if(message.name == username){
-                messageBox.push( 
-                <div key={uuid()} className={styles.messageContainerToTheLeft}>
-                    <img src={userPhoto} className={styles.userPhoto} />
-                    <div className={styles.chatBubbles}>
-                        <p className={styles.userSaid}>
-                            {username + " said:"}
-                        </p>
-                        {message.message}
-                    </div>                          
-                </div>)
-            }
-            else {
-                messageBox.push( 
-                    <div key={uuid()} className={styles.messageContainerToTheRight}>
-                        <img src={userPhoto} className={styles.userPhoto} />
-                        <div className={styles.chatBubbles}>
-                            <p className={styles.userSaid}>
-                                {username + " said:"}
-                            </p>
-                            {message.message}
-                        </div>                          
-                    </div>)
-            }
-        })
-    }
 
     useEffect(() => {
         const keyboardHandler = (e) => {
@@ -108,14 +96,43 @@ function Chat() {
             let chatBox = document.querySelector("." + styles.chatBox);
             chatBox.scrollTop += chatBox.getBoundingClientRect().height;              
         }
-
     })
 
 
     return loading ? (<>...is loading</>) : (
         <main>
             <div className={styles.chatBox}>
-                {messageBox}                
+                {messages.map((message) => {
+                        let name = message.name;
+                        let messageID = message.userID;
+                        let photo = message.photo;                    
+                    if(messageID == userID){
+                        return ( 
+                            <div key={uuid()} className={styles.messageContainerToTheLeft}>
+                                <img src={photo} className={styles.userPhoto} />
+                                <div className={styles.chatBubbles}>
+                                    <p className={styles.userSaid}>
+                                        {name + " said:"}
+                                    </p>
+                                    {message.message}
+                                </div>                          
+                            </div>
+                        )
+                    }
+                    else {
+                        return ( 
+                            <div key={uuid()} className={styles.messageContainerToTheRight}>
+                                <img src={photo} className={styles.userPhoto} />
+                                <div className={styles.chatBubbles}>
+                                    <p className={styles.userSaid}>
+                                        {name + " said:"}
+                                    </p>
+                                    {message.message}
+                                </div>                          
+                            </div>
+                            )
+                        }
+                    })}   
             </div>
 
             <div className={styles.inputContainer}>
