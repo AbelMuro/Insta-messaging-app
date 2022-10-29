@@ -8,11 +8,11 @@ import microsoftIcon from './images/microsoft logo.png';
 
 function SignIn() {
     const provider = new OAuthProvider("microsoft.com");
-    provider.getCustomParameters({
+    provider.setCustomParameters({
         prompt: "consent",
-        client_id: "39d2e370-651f-4490-829e-67e7f508f3aa" ,
+        tenant: "9376f0e7-1c43-470a-aaea-06f6e6e413da",
+        client_id: "39d2e370-651f-4490-829e-67e7f508f3aa",
         redirect_uri: "https://insta-messaging-app.firebaseapp.com/__/auth/handler",
-
     })
     const [signInWithGoogle] = useSignInWithGoogle(auth);
     const [signInWithMicrosoft] = useSignInWithMicrosoft(auth);
