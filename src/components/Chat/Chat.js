@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useRef} from 'react';
 import {db} from '../firebase-config';
 import {collection, addDoc ,orderBy, limit, query} from 'firebase/firestore';
 import {useCollectionData} from 'react-firebase-hooks/firestore';
@@ -11,7 +11,8 @@ function Chat() {
     const [username, setUsername] = useState("");
     const [userID, setUserID] = useState("");
     const [userPhoto, setUserPhoto] = useState("");
-    const [, forceRender] = useState(1);
+    const [, forceRender] = useState(0);
+    const disable = useRef(false);
     const collectionRef = collection(db, "messages");
     const q = query(collectionRef, orderBy("createdAt")); 
     const [messages, loading] = useCollectionData(q);
@@ -47,8 +48,7 @@ function Chat() {
             return;
         }
 
-        let messageButton = document.querySelector("." + styles.sendMessage); 
-        messageButton.setAttribute("disabled", true);
+        disable.current = true
         try{
             const currentDate = new Date();
             const millisecondsSince1970 = currentDate.getTime();                //im using this function to order the messages by the time they were created
@@ -66,13 +66,13 @@ function Chat() {
         }
         finally{
             setTimeout(() => {
-                messageButton.setAttribute("disabled", false);
-                forceRender(2);
+                disable.current = false;
+                forceRender((prevState) => {
+                    return prevState + 0.000001;
+                });
             }, 5000)
         }
     }
-
-
 
     useEffect(() => {
         const keyboardHandler = (e) => {
@@ -82,7 +82,6 @@ function Chat() {
                 let inputBox = document.querySelector("." + styles.input);             
                 sendMessage.click();               
                 inputBox.value = "";              
-
             }
         }
         document.addEventListener("keydown", keyboardHandler)
@@ -103,41 +102,32 @@ function Chat() {
         <main>
             <div className={styles.chatBox}>
                 {messages.map((message) => {
-                        let name = message.name;
-                        let messageID = message.userID;
-                        let photo = message.photo;                    
-                    if(messageID == userID){
-                        return ( 
-                            <div key={uuid()} className={styles.messageContainerToTheLeft}>
-                                <img src={photo} className={styles.userPhoto} />
-                                <div className={styles.chatBubbles}>
-                                    <p className={styles.userSaid}>
-                                        {name + " said:"}
-                                    </p>
-                                    {message.message}
-                                </div>                          
-                            </div>
-                        )
-                    }
-                    else {
-                        return ( 
-                            <div key={uuid()} className={styles.messageContainerToTheRight}>
-                                <img src={photo} className={styles.userPhoto} />
-                                <div className={styles.chatBubbles}>
-                                    <p className={styles.userSaid}>
-                                        {name + " said:"}
-                                    </p>
-                                    {message.message}
-                                </div>                          
-                            </div>
-                            )
-                        }
+                    let name = message.name;
+                    let messageID = message.userID;
+                    let photo = message.photo;     
+                    let leftOrRight;    
+
+                    if(messageID == userID)
+                        leftOrRight = styles.messageContainerToTheLeft;
+                    else
+                        leftOrRight = styles.messageContainerToTheRight;
+                    return ( 
+                        <div key={uuid()} className={leftOrRight}>
+                            <img src={photo} className={styles.userPhoto} />
+                            <div className={styles.chatBubbles}>
+                                <p className={styles.userSaid}>
+                                    {name + " said:"}
+                                </p>
+                                {message.message}
+                            </div>                          
+                        </div>
+                        )                            
                     })}   
             </div>
 
             <div className={styles.inputContainer}>
                 <input type="text" className={styles.input} defaultValue={"Enter message here..."} onClick={handleClick}/>
-                <button onClick={sendMessage} className={styles.sendMessage}>Send Message</button>   
+                <button disabled={disable.current} onClick={sendMessage} className={styles.sendMessage}>Send Message</button>   
                 <button onClick={logOut} className={styles.logoutButton}>Sign out</button>             
             </div>
         </main>

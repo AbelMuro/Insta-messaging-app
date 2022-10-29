@@ -11,7 +11,7 @@ function SignIn() {
 
     const handleGoogle = async () => {
         try{
-           await signInWithGoogle(); 
+            await signInWithGoogle(); 
         }
         catch(error){
             console.log(error);
@@ -36,7 +36,10 @@ function SignIn() {
                 <p className={styles.desc}>
                     This app will enable you to send messages,
                     but you must first sign in with your google 
-                    or Microsoft account 
+                    or Microsoft account. Keep in mind that if your
+                    google account is already logged in, 
+                    The buttons below will automatically direct you 
+                    to the chat. 
                 </p>
                 <button className={styles.signInButton} onClick={handleGoogle}>
                     <img src={googleIcon} className={styles.googleIcon}/>

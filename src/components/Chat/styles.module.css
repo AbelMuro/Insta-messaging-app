@@ -1,7 +1,7 @@
 .chatBox{
     height: 95vh;
     overflow-y: scroll;
-    background-color: rgb(94, 18, 18)
+    background-color: rgb(255, 255, 255)
 }
 
 .chatBubbles{
@@ -9,7 +9,7 @@
     max-width: 500px;
     height: auto;
     padding: 20px;
-    background-color: greenyellow;
+    background-color: rgb(255, 0, 0);
     border-radius: 20px;
 }
 
