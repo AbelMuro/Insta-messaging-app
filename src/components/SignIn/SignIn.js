@@ -1,11 +1,19 @@
 import React from 'react';
 import {auth} from '../firebase-config';
 import {useSignInWithGoogle, useSignInWithMicrosoft} from 'react-firebase-hooks/auth';
+import { OAuthProvider, signInWithPopup } from 'firebase/auth';
 import styles from './styles.module.css';
 import googleIcon from './images/google icon.png';
 import microsoftIcon from './images/microsoft logo.png';
 
 function SignIn() {
+    const provider = new OAuthProvider("microsoft.com");
+    provider.getCustomParameters({
+        prompt: "consent",
+        client_id: "39d2e370-651f-4490-829e-67e7f508f3aa" ,
+        redirect_uri: "https://insta-messaging-app.firebaseapp.com/__/auth/handler",
+
+    })
     const [signInWithGoogle] = useSignInWithGoogle(auth);
     const [signInWithMicrosoft] = useSignInWithMicrosoft(auth);
 
@@ -20,7 +28,7 @@ function SignIn() {
 
     const handleApple = async () => {
         try{
-            await signInWithMicrosoft();
+            await signInWithPopup(auth, provider);
         }
         catch(error){
             console.log(error);
