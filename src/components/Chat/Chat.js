@@ -101,7 +101,7 @@ function Chat() {
         }
     },[loading])
 
-    //TODO: decide to display a <img> tag or a <p> if the message contains a URL
+    //TODO: decide to display a <img> tag if the message contains a URL or display a <p> if the message contains a string
     return loading ? (<>...is loading</>) : (
         <main>
             <div className={styles.chatBox}>
