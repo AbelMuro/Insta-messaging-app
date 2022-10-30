@@ -62,6 +62,7 @@ function Chat() {
         }
     }
 
+    //using this function to access the credentials of the user
     onAuthStateChanged(auth, (currentUser) => {
         if(currentUser != null){
             let name = currentUser.displayName;
@@ -70,14 +71,14 @@ function Chat() {
             if(currentUser.photoURL)
                 photo = currentUser.photoURL;
             else
-                photo = "http://dummyimage.com/100x100.png/ff4444/ffffff"          
+                photo = "http://dummyimage.com/100x100.png/ff4444/ffffff"
             setUsername(name);
             setUserID(id);
             setUserPhoto(photo);
         }
     })
 
-
+    //adding an event listener that will enable the user to send a message by pressing enter
     useEffect(() => {
         const keyboardHandler = (e) => {
             let keyPressed = e.key;
@@ -94,6 +95,7 @@ function Chat() {
         }
     },)
 
+    //everytime the user sends a new message, the chat box will automatically scroll down to view the message
     useEffect(() => {
         if(!loading){
             let chatBox = document.querySelector("." + styles.chatBox);
@@ -101,31 +103,46 @@ function Chat() {
         }
     },[loading])
 
-    //TODO: decide to display a <img> tag if the message contains a URL or display a <p> if the message contains a string
+
     return loading ? (<>...is loading</>) : (
         <main>
-            <div className={styles.chatBox}>
+            <nav className={styles.navBar}>
+                <button onClick={logOut} className={styles.logOutButton}>Sign Out</button>
+            </nav>
+            <div className={styles.chatBox} id="chatbox">
                 {messages.map((message) => {
                     let name = message.name;
                     let messageID = message.userID;
+                    let messageSent = message.message
                     let photo = message.photo;     
                     let leftOrRight;    
-
                     if(messageID == userID)
                         leftOrRight = styles.messageContainerToTheLeft;
                     else
                         leftOrRight = styles.messageContainerToTheRight;
-                    return ( 
-                        <div key={uuid()} className={leftOrRight}>
-                            <img src={photo} className={styles.userPhoto} />
-                            <div className={styles.chatBubbles}>
-                                <p className={styles.userSaid}>
-                                    {name + " said:"}
-                                </p>
-                                {message.message}
-                            </div>                          
-                        </div>
-                        )                            
+
+                    if(!messageSent.includes(" has connected the chat")){
+                        return ( 
+                            <div key={uuid()} className={leftOrRight}>
+                                <img src={photo} className={styles.userPhoto} />
+                                <div className={styles.chatBubbles}>
+                                    <p className={styles.userSaid}>
+                                        {name + " said:"}
+                                    </p>
+                                    {messageSent.includes("http") ? <img src={messageSent} className={styles.imageSent}/> : messageSent}
+                                </div>                          
+                            </div>
+                            )                           
+                    }
+                    else
+                        return(
+                            <div key={uuid()} className={leftOrRight}>
+                                <img src={photo} className={styles.userPhoto} />
+                                <div className={styles.chatBubbles}>
+                                    {`${name} ${messageSent}`}
+                                </div>                          
+                            </div>
+                        )
                     })}   
             </div>
 

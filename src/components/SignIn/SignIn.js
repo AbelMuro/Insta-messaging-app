@@ -1,28 +1,52 @@
 import React from 'react';
-import {auth} from '../firebase-config';
-import {useSignInWithGoogle, useSignInWithMicrosoft} from 'react-firebase-hooks/auth';
-import { OAuthProvider, signInWithPopup } from 'firebase/auth';
+import {auth, db} from '../firebase-config';
+
+import {useSignInWithGoogle, useSignInWithFacebook} from 'react-firebase-hooks/auth';
+import { FacebookAuthProvider, signInWithPopup} from 'firebase/auth';
+import {addDoc, collection} from 'firebase/firestore';
+
 import styles from './styles.module.css';
 import googleIcon from './images/google icon.png';
-import microsoftIcon from './images/microsoft logo.png';
+import facebookIcon from './images/facebook.png';
 
 function SignIn() {
-    const provider = new OAuthProvider("microsoft.com");
     const [signInWithGoogle] = useSignInWithGoogle(auth);
-    const [signInWithMicrosoft] = useSignInWithMicrosoft(auth);
+    const [signInWithFacebook] = useSignInWithFacebook(auth);
 
     const handleGoogle = async () => {
         try{
-            await signInWithGoogle(); 
+           const currentDate = new Date();
+           const millisecondsSince1970 = currentDate.getTime();                //im using this function to order the messages by the time they were created
+           const readableDate = currentDate.toDateString();
+           const hour = currentDate.getHours();
+           const minutes = currentDate.getMinutes();
+           const seconds = currentDate.getSeconds();
+           const messageEntered = readableDate + ", Hour:" + hour + " Minutes:" + minutes + " Seconds:" + seconds;
+           const collectionRef = collection(db, "messages");
+           await signInWithGoogle();
+           const currentUser = auth.currentUser;
+           await addDoc(collectionRef, { name: currentUser.displayName, userID: currentUser.uid, photo: currentUser.photoURL,
+                message: " has connected the chat", timeStamp: messageEntered, createdAt: millisecondsSince1970})
         }
         catch(error){
             console.log(error);
         }
     }
 
-    const handleApple = async () => {
+    const handleFacebook = async () => {
         try{
-            await signInWithPopup(auth, provider);
+            const currentDate = new Date();
+            const millisecondsSince1970 = currentDate.getTime();                //im using this function to order the messages by the time they were created
+            const readableDate = currentDate.toDateString();
+            const hour = currentDate.getHours();
+            const minutes = currentDate.getMinutes();
+            const seconds = currentDate.getSeconds();
+            const messageEntered = readableDate + ", Hour:" + hour + " Minutes:" + minutes + " Seconds:" + seconds;
+            const collectionRef = collection(db, "messages");
+            await signInWithFacebook();
+            const currentUser = auth.currentUser;
+            await addDoc(collectionRef, { name: currentUser.displayName, userID: currentUser.uid, photo: currentUser.photoURL,
+                 message: " has connected the chat", timeStamp: messageEntered, createdAt: millisecondsSince1970})
         }
         catch(error){
             console.log(error);
@@ -47,9 +71,9 @@ function SignIn() {
                     <img src={googleIcon} className={styles.googleIcon}/>
                     <p className={styles.buttonDesc}>Sign in with Google</p>
                 </button>   
-                <button className={styles.signInButton} onClick={handleApple}>
-                    <img src={microsoftIcon} className={styles.microsoftIcon}/>
-                    <p className={styles.buttonDesc}>Sign in with Microsoft</p>
+                <button className={styles.signInButton} onClick={handleFacebook}>
+                    <img src={facebookIcon} className={styles.facebookIcon}/>
+                    <p className={styles.buttonDesc}>Sign in with Facebook</p>
                 </button>            
             </div>
         </section>

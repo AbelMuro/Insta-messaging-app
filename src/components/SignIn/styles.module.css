@@ -49,7 +49,7 @@
     color: white;
 }
 
-.googleIcon, .microsoftIcon{
+.googleIcon, .facebookIcon{
     object-fit: contain;
     width: 50px;
 }

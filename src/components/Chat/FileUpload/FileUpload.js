@@ -43,7 +43,6 @@ function FileUpload({storage, collectionRef, username, userID, userPhoto}) {
                     const button = document.querySelector("." + styles.uploadButton);
                     button.disabled = true;
                     setTimeout(() => {
-                        const button = document.querySelector("." + styles.uploadButton);
                         button.disabled = false;
                         forceRender((prevState) => {
                             return prevState + 0.0000001;
@@ -53,6 +52,13 @@ function FileUpload({storage, collectionRef, username, userID, userPhoto}) {
             }) ();            
         }
     },[file])
+
+    useEffect(() => {
+        setTimeout(() => {
+            let chatBox = document.querySelector("#chatbox");
+            chatBox.scrollTop += chatBox.getBoundingClientRect().height;              
+        }, 1000) 
+    })
     
     return(                
         <button className={styles.uploadButton} onClick={openFileExplorer}>
