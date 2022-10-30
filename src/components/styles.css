@@ -2,3 +2,8 @@
     margin: 0px;
     padding: 0px;
 }
+
+@font-face{
+    font-family: "chat font";
+    src: url(./font/TiroDevanagariMarathi-Regular.ttf);
+}

@@ -1,11 +1,15 @@
 import React, {useEffect, useState, useRef} from 'react';
-import {db} from '../firebase-config';
-import {collection, addDoc ,orderBy, limit, query} from 'firebase/firestore';
-import {useCollectionData} from 'react-firebase-hooks/firestore';
+import FileUpload from './FileUpload';
+import {auth, storage, db} from '../firebase-config';
+
+import {collection, addDoc ,orderBy, query} from 'firebase/firestore';
 import {onAuthStateChanged, signOut} from 'firebase/auth';
-import {auth} from '../firebase-config';
+
+import { useCollectionData } from 'react-firebase-hooks/firestore';
+
 import {v4 as uuid} from 'uuid';
-import styles from './styles.module.css'
+import styles from './styles.module.css';
+
 
 function Chat() {
     const [username, setUsername] = useState("");
@@ -17,7 +21,6 @@ function Chat() {
     const q = query(collectionRef, orderBy("createdAt")); 
     const [messages, loading] = useCollectionData(q);
 
-
     const handleClick = (e) => {
         e.target.value = "";
     }
@@ -26,20 +29,6 @@ function Chat() {
         signOut(auth);
     }
 
-    onAuthStateChanged(auth, (currentUser) => {
-        if(currentUser != null){
-            let name = currentUser.displayName;
-            let id = currentUser.uid;
-            let photo;
-            if(currentUser.photoURL)
-                photo = currentUser.photoURL;
-            else
-                photo = "http://dummyimage.com/100x100.png/ff4444/ffffff"          
-            setUsername(name);
-            setUserID(id);
-            setUserPhoto(photo);
-        }
-    })
 
     const sendMessage = async () => {
         let inputBox = document.querySelector("." + styles.input);
@@ -47,7 +36,6 @@ function Chat() {
             alert("Please enter a message");
             return;
         }
-
         disable.current = true
         try{
             const currentDate = new Date();
@@ -74,6 +62,22 @@ function Chat() {
         }
     }
 
+    onAuthStateChanged(auth, (currentUser) => {
+        if(currentUser != null){
+            let name = currentUser.displayName;
+            let id = currentUser.uid;
+            let photo;
+            if(currentUser.photoURL)
+                photo = currentUser.photoURL;
+            else
+                photo = "http://dummyimage.com/100x100.png/ff4444/ffffff"          
+            setUsername(name);
+            setUserID(id);
+            setUserPhoto(photo);
+        }
+    })
+
+
     useEffect(() => {
         const keyboardHandler = (e) => {
             let keyPressed = e.key;
@@ -88,16 +92,16 @@ function Chat() {
         return () => {
             document.removeEventListener("keydown", keyboardHandler)
         }
-    })
+    },)
 
     useEffect(() => {
         if(!loading){
             let chatBox = document.querySelector("." + styles.chatBox);
             chatBox.scrollTop += chatBox.getBoundingClientRect().height;              
         }
-    })
+    },[loading])
 
-
+    //TODO: decide to display a <img> tag or a <p> if the message contains a URL
     return loading ? (<>...is loading</>) : (
         <main>
             <div className={styles.chatBox}>
@@ -127,11 +131,13 @@ function Chat() {
 
             <div className={styles.inputContainer}>
                 <input type="text" className={styles.input} defaultValue={"Enter message here..."} onClick={handleClick}/>
-                <button disabled={disable.current} onClick={sendMessage} className={styles.sendMessage}>Send Message</button>   
-                <button onClick={logOut} className={styles.logoutButton}>Sign out</button>             
+                <button disabled={disable.current} onClick={sendMessage} className={styles.sendMessage} title={"You can press enter to send a message"}>Send Message</button>   
+                <FileUpload storage={storage} username={username} userID={userID} userPhoto={userPhoto} collectionRef={collectionRef} />
             </div>
         </main>
     )
 } 
 
 export default Chat;
+
+//<button onClick={logOut} className={styles.logoutButton} title={"This will redirect you to the login page"}>Sign out</button>        

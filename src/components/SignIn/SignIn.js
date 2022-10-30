@@ -8,12 +8,6 @@ import microsoftIcon from './images/microsoft logo.png';
 
 function SignIn() {
     const provider = new OAuthProvider("microsoft.com");
-    provider.setCustomParameters({
-        prompt: "consent",
-        tenant: "9376f0e7-1c43-470a-aaea-06f6e6e413da",
-        client_id: "39d2e370-651f-4490-829e-67e7f508f3aa",
-        redirect_uri: "https://insta-messaging-app.firebaseapp.com/__/auth/handler",
-    })
     const [signInWithGoogle] = useSignInWithGoogle(auth);
     const [signInWithMicrosoft] = useSignInWithMicrosoft(auth);
 
@@ -51,11 +45,11 @@ function SignIn() {
                 </p>
                 <button className={styles.signInButton} onClick={handleGoogle}>
                     <img src={googleIcon} className={styles.googleIcon}/>
-                    <p className={styles.desc}>Sign in with Google</p>
+                    <p className={styles.buttonDesc}>Sign in with Google</p>
                 </button>   
                 <button className={styles.signInButton} onClick={handleApple}>
                     <img src={microsoftIcon} className={styles.microsoftIcon}/>
-                    <p className={styles.desc}>Sign in with Microsoft</p>
+                    <p className={styles.buttonDesc}>Sign in with Microsoft</p>
                 </button>            
             </div>
         </section>

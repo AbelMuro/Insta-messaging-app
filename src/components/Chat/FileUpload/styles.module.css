@@ -1,0 +1,21 @@
+.uploadButton{
+    width: 20%;
+    height: 100%;
+    cursor: pointer;
+    border: none;
+    font-family: "font chat";
+    font-size: 20px;
+    background-color: rgb(76, 117, 136);
+    color: black;
+    font-weight: bold;
+}
+
+.uploadButton:hover{
+    background-color: rgb(32, 51, 59);
+    color: white;
+}
+
+.uploadButton:disabled{
+    background-color: grey;
+    color: rgb(163, 163, 163)
+}

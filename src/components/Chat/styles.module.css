@@ -1,7 +1,11 @@
 .chatBox{
     height: 95vh;
     overflow-y: scroll;
-    background-color: rgb(255, 255, 255)
+    background-color: rgb(255, 255, 255);
+    background-image: url("./images/chat\ wallpaper.png");
+    background-size: contain;
+    background-repeat: repeat;
+    background-position: center;
 }
 
 .chatBubbles{
@@ -9,8 +13,10 @@
     max-width: 500px;
     height: auto;
     padding: 20px;
-    background-color: rgb(255, 0, 0);
+    background-color: rgb(76, 117, 136);
+    color: rgb(0, 0, 0);
     border-radius: 20px;
+    font-family: "chat font";
 }
 
 .userPhoto{
@@ -48,11 +54,13 @@
 
 .input{
     font-size: 25px;
-    background-color:darkgrey;
-    color: white;
+    background-color:rgb(255, 255, 255);
+    color: black;
     border: none;
     width: 60%;
     height: 100%;
+    font-family: "chat font";
+    padding-left: 30px 
 }
 
 
@@ -61,13 +69,23 @@
     height: 100%;
     cursor: pointer;
     border: none;
+    font-family: "font chat";
+    font-size: 20px;
+    background-color: rgb(76, 117, 136);
+    color: black;
+    font-weight: bold;
 }
 
-.logoutButton{
-    border-left: 1px solid black;
-}
-
-.sendMessage:hover, .logoutButton:hover{
+.sendMessage:disabled{
     background-color: grey;
+    color: rgb(163, 163, 163)
+}
+
+.sendMessage{
+    border-right: 1px solid white;
+}
+
+.sendMessage:hover:not(:disabled), .logoutButton:hover{
+    background-color: rgb(32, 51, 59);
     color: white;
 }
