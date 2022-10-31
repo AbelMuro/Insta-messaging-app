@@ -1,17 +1,19 @@
 import React from 'react';
 import {auth, db} from '../firebase-config';
 
-import {useSignInWithGoogle, useSignInWithFacebook} from 'react-firebase-hooks/auth';
-import { FacebookAuthProvider, signInWithPopup} from 'firebase/auth';
+import {useSignInWithGoogle, useSignInWithFacebook, useSignInWithMicrosoft} from 'react-firebase-hooks/auth';
+import { FacebookAuthProvider, signInWithPopup, OAuthProvider} from 'firebase/auth';
 import {addDoc, collection} from 'firebase/firestore';
 
 import styles from './styles.module.css';
 import googleIcon from './images/google icon.png';
+import microsoftIcon from './images/microsoft logo.png';
 import facebookIcon from './images/facebook.png';
 
 function SignIn() {
     const [signInWithGoogle] = useSignInWithGoogle(auth);
     const [signInWithFacebook] = useSignInWithFacebook(auth);
+    const [signInWithMicrosoft] = useSignInWithMicrosoft(auth);
 
     const handleGoogle = async () => {
         try{
@@ -53,6 +55,20 @@ function SignIn() {
         }
     }
 
+    const handleMicrosoft = async () => {
+        try{
+            const provider = new OAuthProvider("microsoft.com");
+            provider.setCustomParameters({
+                prompt: "consent",
+                tenant: "9376f0e7-1c43-470a-aaea-06f6e6e413da"
+            })
+            await signInWithPopup(auth, provider);
+        }
+        catch(error){
+            console.log(error);
+        }
+    }
+
     return(
         <section className={styles.background}>
             <div className={styles.signInBox}>
@@ -74,7 +90,12 @@ function SignIn() {
                 <button className={styles.signInButton} onClick={handleFacebook}>
                     <img src={facebookIcon} className={styles.facebookIcon}/>
                     <p className={styles.buttonDesc}>Sign in with Facebook</p>
-                </button>            
+                </button>    
+                <button className={styles.signInButton} onClick={handleMicrosoft}>
+                    <img src={microsoftIcon} className={styles.microsoftIcon}/>
+                    <p className={styles.buttonDesc}>Sign in with Microsoft</p>
+                </button>    
+
             </div>
         </section>
     )
