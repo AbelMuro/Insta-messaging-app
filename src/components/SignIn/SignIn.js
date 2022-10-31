@@ -57,12 +57,23 @@ function SignIn() {
 
     const handleMicrosoft = async () => {
         try{
-            const provider = new OAuthProvider("microsoft.com");
-            provider.setCustomParameters({
-                prompt: "consent",
-                tenant: "9376f0e7-1c43-470a-aaea-06f6e6e413da"
-            })
-            await signInWithPopup(auth, provider);
+            const currentDate = new Date();
+            const millisecondsSince1970 = currentDate.getTime();                
+            const readableDate = currentDate.toDateString();
+            const hour = currentDate.getHours();
+            const minutes = currentDate.getMinutes();
+            const seconds = currentDate.getSeconds();
+            const messageEntered = readableDate + ", Hour:" + hour + " Minutes:" + minutes + " Seconds:" + seconds;
+            const collectionRef = collection(db, "messages");
+            await signInWithMicrosoft("", {tenant: "9376f0e7-1c43-470a-aaea-06f6e6e413da" });
+            const currentUser = auth.currentUser;
+            let userPhoto;
+            if(currentUser.photoURL)
+                userPhoto = currentUser.photoURL
+            else
+                userPhoto = "http://dummyimage.com/100x100.png/ff4444/ffffff"
+            await addDoc(collectionRef, { name: currentUser.displayName, userID: currentUser.uid, photo: userPhoto,
+                 message: " has connected the chat", timeStamp: messageEntered, createdAt: millisecondsSince1970})
         }
         catch(error){
             console.log(error);
