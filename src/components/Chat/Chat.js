@@ -94,9 +94,9 @@ function Chat() {
     //everytime the user sends a new message, the chat box will automatically scroll down to view the message
     //TODO: figure out why this takes time to scroll down
     useEffect(() => {
-        console.log(loading);
         if(!loading){
             let chatBox = document.querySelector("#chatbox");
+            console.log(chatBox.getBoundingClientRect().height)
             chatBox.scrollTop += chatBox.getBoundingClientRect().height;              
         }
     },[loading])
