@@ -2,7 +2,6 @@ import React from 'react';
 import {auth, db} from '../firebase-config';
 
 import {useSignInWithGoogle, useSignInWithFacebook, useSignInWithMicrosoft} from 'react-firebase-hooks/auth';
-import { FacebookAuthProvider, signInWithPopup, OAuthProvider} from 'firebase/auth';
 import {addDoc, collection} from 'firebase/firestore';
 
 import styles from './styles.module.css';

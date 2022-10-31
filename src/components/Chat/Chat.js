@@ -15,8 +15,6 @@ function Chat() {
     const [username, setUsername] = useState("");
     const [userID, setUserID] = useState("");
     const [userPhoto, setUserPhoto] = useState("");
-    const [, forceRender] = useState(0);
-    const disable = useRef(false);
     const collectionRef = collection(db, "messages");
     const q = query(collectionRef, orderBy("createdAt")); 
     const [messages, loading] = useCollectionData(q);
@@ -31,12 +29,13 @@ function Chat() {
 
 
     const sendMessage = async () => {
-        let inputBox = document.querySelector("." + styles.input);
+        const inputBox = document.querySelector("." + styles.input);
+        const messageButton = document.querySelector("." + styles.sendMessage)
         if(inputBox.value == "") {
             alert("Please enter a message");
             return;
         }
-        disable.current = true
+        messageButton.disabled = true
         try{
             const currentDate = new Date();
             const millisecondsSince1970 = currentDate.getTime();                //im using this function to order the messages by the time they were created
@@ -54,11 +53,8 @@ function Chat() {
         }
         finally{
             setTimeout(() => {
-                disable.current = false;
-                forceRender((prevState) => {
-                    return prevState + 0.000001;
-                });
-            }, 5000)
+                messageButton.disabled = false;
+            }, 3000);
         }
     }
 
@@ -96,9 +92,11 @@ function Chat() {
     },)
 
     //everytime the user sends a new message, the chat box will automatically scroll down to view the message
+    //TODO: figure out why this takes time to scroll down
     useEffect(() => {
+        console.log(loading);
         if(!loading){
-            let chatBox = document.querySelector("." + styles.chatBox);
+            let chatBox = document.querySelector("#chatbox");
             chatBox.scrollTop += chatBox.getBoundingClientRect().height;              
         }
     },[loading])
@@ -148,7 +146,7 @@ function Chat() {
 
             <div className={styles.inputContainer}>
                 <input type="text" className={styles.input} defaultValue={"Enter message here..."} onClick={handleClick}/>
-                <button disabled={disable.current} onClick={sendMessage} className={styles.sendMessage} title={"You can press enter to send a message"}>Send Message</button>   
+                <button onClick={sendMessage} className={styles.sendMessage} title={"You can press enter to send a message"}>Send Message</button>   
                 <FileUpload storage={storage} username={username} userID={userID} userPhoto={userPhoto} collectionRef={collectionRef} />
             </div>
         </main>
