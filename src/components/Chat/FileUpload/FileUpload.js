@@ -53,7 +53,7 @@ function FileUpload({storage, collectionRef, username, userID, userPhoto}) {
     useEffect(() => {
         setTimeout(() => {
             let chatBox = document.querySelector("#chatbox");
-            chatBox.scrollTop +=  999999;              
+            chatBox.scrollTop +=  chatBox.scrollHeight;              
         }, 1000) 
     })
     
