@@ -6,7 +6,6 @@ import styles from './styles.module.css';
 
 function FileUpload({storage, collectionRef, username, userID, userPhoto}) {
     const [file, setFile] = useState([]);
-    const [,forceRender] = useState(0.0000001);
     const [uploadFile] = useUploadFile();
 
     const openFileExplorer = (e) => {
@@ -31,22 +30,20 @@ function FileUpload({storage, collectionRef, username, userID, userPhoto}) {
     useEffect(() => {
         if(file.length > 0){
             (async function storeFile () {
+                const button = document.querySelector("." + styles.uploadButton);
                 try {    
+                    button.disabled = true;
                     const ref = storageRef(storage, "/" + userID + "/" + file[0].name);
                     await uploadFile(ref, file[0]); 
                     sendMessage();
                 }
                 catch(error){
+                    button.disabled = false;
                     console.log(error);
                 }
                 finally{
-                    const button = document.querySelector("." + styles.uploadButton);
-                    button.disabled = true;
                     setTimeout(() => {
                         button.disabled = false;
-                        forceRender((prevState) => {
-                            return prevState + 0.0000001;
-                        })
                     }, 5000)                    
                 }
             }) ();            
@@ -56,7 +53,7 @@ function FileUpload({storage, collectionRef, username, userID, userPhoto}) {
     useEffect(() => {
         setTimeout(() => {
             let chatBox = document.querySelector("#chatbox");
-            chatBox.scrollTop += chatBox.getBoundingClientRect().height;              
+            chatBox.scrollTop +=  999999;              
         }, 1000) 
     })
     
