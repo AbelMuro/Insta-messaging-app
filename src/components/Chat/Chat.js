@@ -99,12 +99,13 @@ function Chat() {
         return () => {
             document.removeEventListener("keydown", keyboardHandler)
         }
-    },)
+    })
 
     //everytime the user sends a new message, the chat box will automatically scroll down to view the message
     useEffect(() => {
         let chatBox = document.querySelector("#chatbox");
-        chatBox.scrollTop += chatBox.getBoundingClientRect().height;              
+        chatBox.scrollTop += 999999999;                    //i used a really big number to make sure that the element scrolls down to the bottom to display new message
+        console.log(chatBox.scrollTop);         
     })
 
     return (
