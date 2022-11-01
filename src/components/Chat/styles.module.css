@@ -2,7 +2,15 @@
     height: 5vh;
     background-color:rgb(16, 26, 31);
     display: flex;
-    flex-direction: row-reverse;
+    justify-content: space-between;
+}
+
+.logo{
+    color: rgb(125, 193, 224);
+    font-family: 'font chat';
+    font-weight: 900;
+    font-size: 30px;
+    align-self: center;
 }
 
 .logOutButton {
@@ -25,22 +33,29 @@
     height: 90vh;
     overflow-y: scroll;
     background-color: rgb(255, 255, 255);
-    background-image: url("./images/chat\ wallpaper.png");
+    background-image: url("./images/chat wallpaper.png");
     background-size: contain;
     background-repeat: repeat;
     background-position: center;
 }
 
-.chatBubbles{
+.userChatBubble, .otherChatBubble{
     display: inline-block;
     max-width: 500px;
     height: auto;
     padding: 20px;
-    background-color: rgb(76, 117, 136);
     color: rgb(0, 0, 0);
     border-radius: 20px;
     font-family: "chat font";
 }
+.userChatBubble{
+    background-color: rgb(125, 193, 224);
+}
+
+.otherChatBubble{
+    background-color: rgb(76, 117, 136);
+}
+
 
 .userPhoto{
     object-fit: contain;
@@ -87,7 +102,7 @@
 }
 
 
-.sendMessage, .logoutButton{
+.sendMessage{
     width: 20%;
     height: 100%;
     cursor: pointer;
@@ -108,7 +123,7 @@
     border-right: 1px solid white;
 }
 
-.sendMessage:hover:not(:disabled), .logoutButton:hover{
+.sendMessage:hover:not(:disabled){
     background-color: rgb(32, 51, 59);
     color: white;
 }
@@ -116,4 +131,56 @@
 .imageSent{
     object-fit: contain;
     width: 500px;
+}
+
+.loadingContainer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+@media(max-width: 655px){
+    .imageSent{
+        width: 400px;
+    }
+
+}
+
+
+@media (max-width: 610px){
+    .logo{
+        font-size: 18px;
+    }
+
+    .logOutButton{
+        width: 100px;
+    }
+
+    .userChatBubble, .otherChatBubble {
+        max-width: 150px;
+        font-size: 14px;
+        padding: 10px;
+    }
+
+    .userPhoto{
+        height: 45px;
+    }
+
+    .messageContainerToTheLeft, .messageContainerToTheRight {
+        margin-bottom: 20px;
+        gap: 10px;
+    }
+
+    .imageSent{
+        width: 150px;
+    }
+
+    .input, .sendMessage{
+        font-size: 14px;
+    }
+    .sendMessage{
+        width: 110px;
+    }
 }

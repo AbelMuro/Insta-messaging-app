@@ -27,7 +27,7 @@ function SignIn() {
            await signInWithGoogle();
            const currentUser = auth.currentUser;
            await addDoc(collectionRef, { name: currentUser.displayName, userID: currentUser.uid, photo: currentUser.photoURL,
-                message: " has connected the chat", timeStamp: messageEntered, createdAt: millisecondsSince1970})
+                message: " has connected the chat", timeStamp: messageEntered, createdAt: millisecondsSince1970, loggedInMessage: " has connected the chat"})
         }
         catch(error){
             console.log(error);
@@ -47,7 +47,7 @@ function SignIn() {
             await signInWithFacebook();
             const currentUser = auth.currentUser;
             await addDoc(collectionRef, { name: currentUser.displayName, userID: currentUser.uid, photo: currentUser.photoURL,
-                 message: " has connected the chat", timeStamp: messageEntered, createdAt: millisecondsSince1970})
+                 message: " has connected the chat", timeStamp: messageEntered, createdAt: millisecondsSince1970, loggedInMessage: " has connected the chat" })
         }
         catch(error){
             console.log(error);
@@ -66,13 +66,8 @@ function SignIn() {
             const collectionRef = collection(db, "messages");
             await signInWithMicrosoft("", {tenant: "9376f0e7-1c43-470a-aaea-06f6e6e413da" });
             const currentUser = auth.currentUser;
-            let userPhoto;
-            if(currentUser.photoURL)
-                userPhoto = currentUser.photoURL
-            else
-                userPhoto = "http://dummyimage.com/100x100.png/ff4444/ffffff"
-            await addDoc(collectionRef, { name: currentUser.displayName, userID: currentUser.uid, photo: userPhoto,
-                 message: " has connected the chat", timeStamp: messageEntered, createdAt: millisecondsSince1970})
+            await addDoc(collectionRef, { name: currentUser.displayName, userID: currentUser.uid, photo: currentUser.photoURL,
+                 message: "", timeStamp: messageEntered, createdAt: millisecondsSince1970, loggedInMessage: " has connected the chat"})
         }
         catch(error){
             console.log(error);
@@ -86,12 +81,9 @@ function SignIn() {
                     Insta Chatter Box!
                 </h1>
                 <p className={styles.desc}>
-                    This app will enable you to send messages,
-                    but you must first sign in with your google 
-                    or Microsoft account. Keep in mind that if your
-                    google account is already logged in, 
-                    The buttons below will automatically direct you 
-                    to the chat. 
+                    Welcome to my app! This is a live streaming chat 
+                    that anyone can use to send messages or upload images.
+                    Please be respectful of each other. Enjoy!
                 </p>
                 <button className={styles.signInButton} onClick={handleGoogle}>
                     <img src={googleIcon} className={styles.googleIcon}/>

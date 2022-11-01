@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useRef} from 'react';
+import React, {useEffect, useState} from 'react';
 import FileUpload from './FileUpload';
 import {auth, storage, db} from '../firebase-config';
 
@@ -10,6 +10,7 @@ import { useCollectionData } from 'react-firebase-hooks/firestore';
 import {v4 as uuid} from 'uuid';
 import styles from './styles.module.css';
 
+import { CircularProgress } from '@mui/material';
 
 function Chat() {
     const [username, setUsername] = useState("");
@@ -23,6 +24,10 @@ function Chat() {
         e.target.value = "";
     }
 
+    const handleError = (e) => {
+        e.target.src = "http://dummyimage.com/100x100.png/ff4444/ffffff";
+    }
+
     const logOut = () => {
         signOut(auth);
     }
@@ -34,6 +39,10 @@ function Chat() {
         if(inputBox.value == "") {
             alert("Please enter a message");
             return;
+        }
+        else if(inputBox.value.length > 200){
+            alert("You message can't exceed 200 characters");
+            return
         }
         messageButton.disabled = true
         try{
@@ -52,6 +61,7 @@ function Chat() {
             console.log(error);
         }
         finally{
+            inputBox.value = "";    
             setTimeout(() => {
                 messageButton.disabled = false;
             }, 3000);
@@ -92,55 +102,61 @@ function Chat() {
     },)
 
     //everytime the user sends a new message, the chat box will automatically scroll down to view the message
-    //TODO: figure out why this takes time to scroll down
     useEffect(() => {
-        if(!loading){
-            let chatBox = document.querySelector("#chatbox");
-            console.log(chatBox.getBoundingClientRect().height)
-            chatBox.scrollTop += chatBox.getBoundingClientRect().height;              
-        }
-    },[loading])
+        let chatBox = document.querySelector("#chatbox");
+        chatBox.scrollTop += chatBox.getBoundingClientRect().height;              
+    })
 
-
-    return loading ? (<>...is loading</>) : (
+    return (
         <main>
             <nav className={styles.navBar}>
+                <p className={styles.logo}>
+                    Instant Chatter Box App
+                </p>
                 <button onClick={logOut} className={styles.logOutButton}>Sign Out</button>
             </nav>
             <div className={styles.chatBox} id="chatbox">
-                {messages.map((message) => {
+                {loading ? (<div className={styles.loadingContainer}><CircularProgress color="success"/> </div>) : messages.map((message) => {
                     let name = message.name;
                     let messageID = message.userID;
-                    let messageSent = message.message
+                    let messageSent = message.message;
                     let photo = message.photo;     
-                    let leftOrRight;    
-                    if(messageID == userID)
+                    let leftOrRight; 
+                    let chatBubble; 
+                    if(messageID == userID){
                         leftOrRight = styles.messageContainerToTheLeft;
-                    else
+                        chatBubble = styles.userChatBubble;
+                    }
+                    else{
                         leftOrRight = styles.messageContainerToTheRight;
+                        chatBubble = styles.otherChatBubble;
+                    }    
 
-                    if(!messageSent.includes(" has connected the chat")){
+                    if(!message.hasOwnProperty("loggedInMessage")){
                         return ( 
                             <div key={uuid()} className={leftOrRight}>
-                                <img src={photo} className={styles.userPhoto} />
-                                <div className={styles.chatBubbles}>
+                                <img src={photo} className={styles.userPhoto} onError={handleError} alt={"users photo"}/>
+                                <div className={chatBubble}>
                                     <p className={styles.userSaid}>
                                         {name + " said:"}
                                     </p>
-                                    {messageSent.includes("http") ? <img src={messageSent} className={styles.imageSent}/> : messageSent}
+                                    {messageSent.includes("http") ? <img src={messageSent} className={styles.imageSent} alt={"image sent by user"}/> : messageSent}
                                 </div>                          
                             </div>
-                            )                           
+                        )                           
                     }
-                    else
-                        return(
-                            <div key={uuid()} className={leftOrRight}>
-                                <img src={photo} className={styles.userPhoto} />
-                                <div className={styles.chatBubbles}>
-                                    {`${name} ${messageSent}`}
-                                </div>                          
-                            </div>
-                        )
+                    else{
+                        let loggedInMessage = message.loggedInMessage;
+                        if(photo == null) photo = "";                       //if photo is null, then it wont trigger the onError event
+                            return(
+                                <div key={uuid()} className={leftOrRight} >
+                                    <img src={photo} className={styles.userPhoto} onError={handleError} alt={"users photo"}/>
+                                    <div className={chatBubble}>
+                                        {`${name} ${loggedInMessage}`}
+                                    </div>                          
+                                </div>
+                            )
+                        }
                     })}   
             </div>
 
@@ -155,4 +171,3 @@ function Chat() {
 
 export default Chat;
 
-//<button onClick={logOut} className={styles.logoutButton} title={"This will redirect you to the login page"}>Sign out</button>        

@@ -58,3 +58,17 @@
     margin: auto;
     font-size: 20px;
 }
+
+@media (max-width: 480px) {
+    .signInBox {
+        width: 300px
+    }
+
+    .title{
+        font-size: 30px;
+    }
+
+    .desc {
+        font-size: 18px;
+    }
+}
