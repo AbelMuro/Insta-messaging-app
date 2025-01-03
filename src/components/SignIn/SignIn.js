@@ -34,26 +34,6 @@ function SignIn() {
         }
     }
 
-    const handleFacebook = async () => {
-        try{
-            const currentDate = new Date();
-            const millisecondsSince1970 = currentDate.getTime();                //im using this function to order the messages by the time they were created
-            const readableDate = currentDate.toDateString();
-            const hour = currentDate.getHours();
-            const minutes = currentDate.getMinutes();
-            const seconds = currentDate.getSeconds();
-            const messageEntered = readableDate + ", Hour:" + hour + " Minutes:" + minutes + " Seconds:" + seconds;
-            const collectionRef = collection(db, "messages");
-            await signInWithFacebook();
-            const currentUser = auth.currentUser;
-            await addDoc(collectionRef, { name: currentUser.displayName, userID: currentUser.uid, photo: currentUser.photoURL,
-                 message: " has connected the chat", timeStamp: messageEntered, createdAt: millisecondsSince1970, loggedInMessage: " has connected the chat" })
-        }
-        catch(error){
-            console.log(error);
-        }
-    }
-
     const handleMicrosoft = async () => {
         try{
             const currentDate = new Date();
@@ -89,10 +69,6 @@ function SignIn() {
                     <img src={googleIcon} className={styles.googleIcon}/>
                     <p className={styles.buttonDesc}>Sign in with Google</p>
                 </button>   
-                <button className={styles.signInButton} onClick={handleFacebook}>
-                    <img src={facebookIcon} className={styles.facebookIcon}/>
-                    <p className={styles.buttonDesc}>Sign in with Facebook</p>
-                </button>    
                 <button className={styles.signInButton} onClick={handleMicrosoft}>
                     <img src={microsoftIcon} className={styles.microsoftIcon}/>
                     <p className={styles.buttonDesc}>Sign in with Microsoft</p>
